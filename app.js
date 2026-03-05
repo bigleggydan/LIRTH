@@ -57,23 +57,31 @@ async function displayTreasureList() {
     const listDiv = document.getElementById('user-task-list');
     listDiv.innerHTML = "Loading your hunt...";
 
-    const docRef = doc(db, "settings", "treasureHunt");
-    const docSnap = await getDoc(docRef);
+    try {
+        const docRef = doc(db, "settings", "treasureHunt");
+        const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-        const items = docSnap.data().items;
-        listDiv.innerHTML = ""; // Clear loading text
-        
-        items.forEach((item, index) => {
-            const itemRow = `
-                <div style="margin: 10px 0;">
-                    <input type="checkbox" id="item-${index}">
-                    <label for="item-${index}">${item}</label>
-                </div>
-            `;
-            listDiv.insertAdjacentHTML('beforeend', itemRow);
-        });
-    } else {
-        listDiv.innerHTML = "No items found. Check your Firestore 'settings' collection!";
+        if (docSnap.exists()) {
+            const itemsArray = docSnap.data().items; 
+            
+            // --- ADD THESE TWO LINES HERE ---
+            console.log("Database response:", docSnap.data());
+            console.log("Items array:", itemsArray);
+            // --------------------------------
+
+            listDiv.innerHTML = ""; 
+
+            itemsArray.forEach((treasureName, index) => {
+                const itemHtml = `
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <input type="checkbox" id="item-${index}">
+                        <label for="item-${index}">${treasureName}</label>
+                    </div>
+                `;
+                listDiv.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        } 
+    } catch (error) {
+        console.log("Error fetching data:", error);
     }
 }
