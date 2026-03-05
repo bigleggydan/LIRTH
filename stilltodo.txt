@@ -1,1 +1,6 @@
+Get login screen to work
+Create Master List
+Give user a copy of Master List when they log in
+Save Users Copy for retrieval
+Save users edits to master
 
