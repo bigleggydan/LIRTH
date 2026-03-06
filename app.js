@@ -100,7 +100,6 @@ async function displayTreasureList() {
 }
 
 function setupCheckboxListeners() {
-    checkCompletion(); // Check immediately after loading
     const checkboxes = document.querySelectorAll('.treasure-check');
     checkboxes.forEach(box => {
         box.addEventListener('change', async (e) => {
@@ -111,6 +110,7 @@ function setupCheckboxListeners() {
                     [e.target.id]: e.target.checked
                 }, { merge: true });
                 console.log("Progress saved to cloud!");
+                checkCompletion();
             }
         });
     });

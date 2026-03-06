@@ -62,3 +62,6 @@ input[type="text"] {
     flex-grow: 1;
     text-align: left !important;
 }
+#congrats-msg {
+    transition: all 0.5s ease-in-out;
+}
