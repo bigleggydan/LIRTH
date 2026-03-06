@@ -136,4 +136,15 @@ function checkCompletion() {
         congratsMsg.style.display = 'none';
         document.getElementById('app-container').style.borderColor = 'transparent';
     }
+    // Function to show the Treasure Hunt and hide Login
+function showAppPage() {
+    document.getElementById('auth-container').style.display = 'none';
+    document.getElementById('app-container').style.display = 'block';
+}
+
+// Function to show the Login/Register and hide the Hunt
+function showAuthPage() {
+    document.getElementById('auth-container').style.display = 'block';
+    document.getElementById('app-container').style.display = 'none';
+}
 }
