@@ -6,34 +6,27 @@
     <title>Firebase Tick-List App</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+    <body>
 
-    <div class="container">
-        <div id="auth-container">
-            <h2>Welcome</h2>
-            <p>Please login to manage your list</p>
-            
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            
-            <div class="button-group">
-                <button id="login-btn">Login</button>
-                <button id="signup-btn" class="secondary">Sign Up</button>
-            </div>
-            
-            <p id="auth-error" class="error-msg"></p>
+        <div id="auth-container" style="max-width: 400px; margin: 50px auto; text-align: center; font-family: sans-serif;">
+            <h2>Treasure Hunt Login</h2>
+            <input type="email" id="email" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <button id="login-btn" style="width: 100%; padding: 10px; margin-bottom: 5px; background: #007bff; color: white; border: none; cursor: pointer;">Login</button>
+            <button id="signup-btn" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer;">Sign Up</button>
         </div>
 
-        <div id="app-container" style="display: none;">
-            <header>
-                <h3>My Tasks</h3>
-                <button id="logout-btn">Logout</button>
-            </header>
-            
+        <div id="app-container" style="display: none; max-width: 500px; margin: 50px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: sans-serif;">
+        
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: #333;">My Treasure Hunt</h2>
+                <button id="logout-btn" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer;">Logout</button>
+            </div>
+            <div id="congrats-msg" style="display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid #c3e6cb;">
+            🎉 Hunt Completed! You've found everything!</div>
             <div id="user-task-list"></div>
         </div>
-    </div>
 
-    <script type="module" src="app.js"></script>
-</body>
+        <script type="module" src="app.js"></script>
+    </body>
 </html>

@@ -1,7 +1,7 @@
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -54,34 +54,81 @@ onAuthStateChanged(auth, (user) => {
 
 // --- 5. THE LIST BUILDER ---
 async function displayTreasureList() {
+    checkCompletion(); // Check immediately after loading
     const listDiv = document.getElementById('user-task-list');
+    const user = auth.currentUser;
+    if (!user) return;
+
     listDiv.innerHTML = "Loading your hunt...";
 
     try {
-        const docRef = doc(db, "settings", "treasureHunt");
-        const docSnap = await getDoc(docRef);
+        // 1. Fetch the Master List AND the User's Progress at the same time
+        const masterRef = doc(db, "settings", "treasureHunt_March");
+        const progressRef = doc(db, "userProgress", user.uid);
+        
+        const [masterSnap, progressSnap] = await Promise.all([
+            getDoc(masterRef),
+            getDoc(progressRef)
+        ]);
 
-        if (docSnap.exists()) {
-            const itemsArray = docSnap.data().items; 
+        if (masterSnap.exists()) {
+            const itemsArray = masterSnap.data().items;
+            const savedProgress = progressSnap.exists() ? progressSnap.data() : {};
             
-            // --- ADD THESE TWO LINES HERE ---
-            console.log("Database response:", docSnap.data());
-            console.log("Items array:", itemsArray);
-            // --------------------------------
-
             listDiv.innerHTML = ""; 
 
             itemsArray.forEach((treasureName, index) => {
+                const itemId = `item-${index}`;
+                // Check if this specific ID was saved as 'true' in our progress doc
+                const isChecked = savedProgress[itemId] === true ? "checked" : "";
+
                 const itemHtml = `
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <input type="checkbox" id="item-${index}">
-                        <label for="item-${index}">${treasureName}</label>
+                    <div class="checklist-row">
+                        <input type="checkbox" id="${itemId}" class="treasure-check" data-name="${treasureName}" ${isChecked}>
+                        <label for="${itemId}">${treasureName}</label>
                     </div>
                 `;
                 listDiv.insertAdjacentHTML('beforeend', itemHtml);
             });
-        } 
+
+            // 2. Re-attach the listeners to the new checkboxes
+            setupCheckboxListeners();
+        }
     } catch (error) {
-        console.log("Error fetching data:", error);
+        console.error("Error loading list:", error);
+    }
+}
+
+function setupCheckboxListeners() {
+    checkCompletion(); // Check immediately after loading
+    const checkboxes = document.querySelectorAll('.treasure-check');
+    checkboxes.forEach(box => {
+        box.addEventListener('change', async (e) => {
+            const user = auth.currentUser;
+            if (user) {
+                const userDocRef = doc(db, "userProgress", user.uid);
+                await setDoc(userDocRef, {
+                    [e.target.id]: e.target.checked
+                }, { merge: true });
+                console.log("Progress saved to cloud!");
+            }
+        });
+    });
+}
+function checkCompletion() {
+    const checkboxes = document.querySelectorAll('.treasure-check');
+    const congratsMsg = document.getElementById('congrats-msg');
+    
+    // Count how many are checked
+    const totalItems = checkboxes.length;
+    const checkedItems = Array.from(checkboxes).filter(box => box.checked).length;
+
+    if (totalItems > 0 && checkedItems === totalItems) {
+        congratsMsg.style.display = 'block';
+        // Optional: Add a little 'completed' class to the card
+        document.getElementById('app-container').style.borderColor = '#28a745';
+    } else {
+        congratsMsg.style.display = 'none';
+        document.getElementById('app-container').style.borderColor = 'transparent';
     }
 }
