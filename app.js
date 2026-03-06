@@ -1,6 +1,6 @@
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Initialize Firebase
@@ -21,7 +21,7 @@ const appContainer = document.getElementById('app-container');
 signupBtn.addEventListener('click', () => {
     const email = emailInput.value;
     const password = passwordInput.value;
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password, sendEmailVerification)
         .catch(error => alert(error.message));
 });
 
@@ -41,14 +41,19 @@ logoutBtn.addEventListener('click', () => {
 // --- 4. THE "WATCHER" (Checks if someone is logged in) ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is logged in
-        authContainer.style.display = 'none';
-        appContainer.style.display = 'block';
-        displayTreasureList(); // Call the list builder
+        // Check if the user has clicked the link in their email
+        if (user.emailVerified) {
+            console.log("User is verified!");
+            showAppPage();
+            displayTreasureList();
+        } else {
+            // User exists but hasn't verified yet
+            alert("Please verify your email! Check your inbox (and spam folder).");
+            signOut(auth); // Log them out so they have to click the link first
+            showAuthPage();
+        }
     } else {
-        // User is logged out
-        authContainer.style.display = 'block';
-        appContainer.style.display = 'none';
+        showAuthPage();
     }
 });
 
