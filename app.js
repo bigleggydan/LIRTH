@@ -146,6 +146,25 @@ function checkCompletion() {
         congratsMsg.style.display = 'none';
         document.getElementById('app-container').style.borderColor = 'transparent';
     }
-    // Function to show the Treasure Hunt and hide Login
 
-}
+// This runs once the script loads
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('email-input').value;
+            const pass = document.getElementById('password-input').value;
+            handleLogin(email, pass);
+        });
+    }
+
+    if (registerBtn) {
+        registerBtn.addEventListener('click', () => {
+            const email = document.getElementById('email-input').value;
+            const pass = document.getElementById('password-input').value;
+            handleRegister(email, pass);
+        });
+    }
+});
