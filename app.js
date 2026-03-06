@@ -3,6 +3,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+function showAppPage() {
+    document.getElementById('auth-container').style.display = 'none';
+    document.getElementById('app-container').style.display = 'block';
+}
+
+// Function to show the Login/Register and hide the Hunt
+function showAuthPage() {
+    document.getElementById('auth-container').style.display = 'block';
+    document.getElementById('app-container').style.display = 'none';
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -32,12 +43,6 @@ loginBtn.addEventListener('click', () => {
     signInWithEmailAndPassword(auth, email, password)
         .catch(error => alert("Login failed: " + error.message));
 });
-
-// --- 3. LOGOUT LOGIC ---
-logoutBtn.addEventListener('click', () => {
-    signOut(auth);
-});
-
 // --- 4. THE "WATCHER" (Checks if someone is logged in) ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -55,6 +60,11 @@ onAuthStateChanged(auth, (user) => {
     } else {
         showAuthPage();
     }
+});
+
+// --- 3. LOGOUT LOGIC ---
+logoutBtn.addEventListener('click', () => {
+    signOut(auth);
 });
 
 // --- 5. THE LIST BUILDER ---
@@ -137,14 +147,5 @@ function checkCompletion() {
         document.getElementById('app-container').style.borderColor = 'transparent';
     }
     // Function to show the Treasure Hunt and hide Login
-function showAppPage() {
-    document.getElementById('auth-container').style.display = 'none';
-    document.getElementById('app-container').style.display = 'block';
-}
 
-// Function to show the Login/Register and hide the Hunt
-function showAuthPage() {
-    document.getElementById('auth-container').style.display = 'block';
-    document.getElementById('app-container').style.display = 'none';
-}
 }
