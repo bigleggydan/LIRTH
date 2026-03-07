@@ -60,3 +60,14 @@ JavaScript
 const masterRef = doc(db, "settings", "treasureHunt_March");
 to
 const masterRef = doc(db, "settings", "treasureHunt_March");
+
+
+When Code changes are made some users will not see them because their phone browsers cache the app......... this is how you force their Browser to refresh the App in cache
+
+Find this line in index.html 
+
+<script type="module" src="app.js?v=1.0"></script>
+
+Change the Version Number - this makes the Browser download the new app
+
+
