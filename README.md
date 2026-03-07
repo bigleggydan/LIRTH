@@ -1,4 +1,4 @@
-To update the master list for a new month
+**To update the master list for a new month**
 
 Here is how you swap the old hunt for a new one:
 
