@@ -1,3 +1,4 @@
+console.log("Button check:", document.getElementById('login-btn'));
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
