@@ -159,6 +159,18 @@ function checkCompletion() {
 }
 
 // --- EVENT LISTENERS ---
-document.getElementById('signup-btn').addEventListener('click', handleRegister);
-document.getElementById('login-btn').addEventListener('click', handleLogin);
-document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+const loginBtn = document.getElementById('login-btn');
+const signupBtn = document.getElementById('signup-btn');
+const logoutBtn = document.getElementById('logout-btn');
+
+if (loginBtn) {
+    loginBtn.addEventListener('click', handleLogin);
+}
+
+if (signupBtn) {
+    signupBtn.addEventListener('click', handleRegister);
+}
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => signOut(auth));
+}
