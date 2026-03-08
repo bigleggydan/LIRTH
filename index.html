@@ -7,26 +7,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
     <body>
-
-        <div id="auth-container" style="max-width: 400px; margin: 50px auto; text-align: center; font-family: sans-serif;">
+        <div id="auth-container">
             <h2>Welcome to the Treasure Hunt!</h2>
+        
             <div class="login-instructions">
                 <p><strong>First time here?</strong> Enter your email address and set a password and click on 'Sign Up'. This will send an email to you. Click on the link in the email and then you will be able to log in.</p>
             </div>
-            <input type="email" id="email" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-            <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-            <button id="login-btn" style="width: 100%; padding: 10px; margin-bottom: 5px; background: #007bff; color: white; border: none; cursor: pointer;">Login</button>
-            <button id="signup-btn" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer;">Sign Up</button>
+
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+        
+            <button id="login-btn">Login</button>
+            <button id="signup-btn">Sign Up</button>
         </div>
 
-        <div id="app-container" style="display: none; max-width: 500px; margin: 50px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: sans-serif;">
-        
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
-                <h2 style="margin: 0; color: #333;">My Treasure Hunt</h2>
-                <button id="logout-btn" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer;">Logout</button>
+        <div id="app-container" style="display: none;">
+            <div class="app-header">
+                <h2>My Treasure Hunt</h2>
+                <button id="logout-btn">Logout</button>
             </div>
-            <div id="congrats-msg" style="display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid #c3e6cb;">
-            🎉 Hunt Completed! You've found everything!</div>
+        
+            <div id="congrats-msg" style="display: none;">
+                🎉 Hunt Completed! You've found everything!
+            </div>
+        
             <div id="user-task-list"></div>
         </div>
 
