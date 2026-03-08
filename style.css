@@ -50,13 +50,16 @@ input[type="text"] {
     display: block;
 }
 
-/* --- Checklist Items Readability --- */
-.checklist-row label {
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: #1A531A; /* Ensure list items are readable */
+/* --- Fix the Staircase Alignment --- */
+.checklist-row {
+    display: flex;         /* Puts checkbox and label on the same line */
+    align-items: center;   /* Centers them vertically against each other */
+    justify-content: flex-start; /* Forces them to the left */
+    text-align: left;      /* Overrides the center-align from the parent */
+    width: 100%;           /* Takes up full container width */
+    margin-bottom: 12px;   /* Adds breathing room between items */
+    padding: 8px 0;        /* Optional: makes the clickable area bigger */
 }
-
 /* FORCE THE CHECKBOX SIZE */
 .checklist-row input[type="checkbox"] {
     width: 20px !important;
