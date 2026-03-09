@@ -1,0 +1,5 @@
+Run : 
+
+firebase deploy  to push updates and changes to the live site
+
+firebase serve - give you a sandbox local version at localhost:5000
