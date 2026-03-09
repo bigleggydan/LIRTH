@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Tick-List App - UPDATED</title>
+    <link rel="stylesheet" href="theme.css?v=0.1">
+</head>
+    <body>
+        <div id="auth-container">
+            <h2>Welcome to the Treasure Hunt!</h2>
+        
+            <div class="login-instructions">
+                <p><strong>First time here?</strong> Enter your email address and set a password and click on 'Sign Up'. This will send an email to you. Click on the link in the email and then you will be able to log in.</p>
+            </div>
+
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+        
+            <button id="login-btn">Login</button>
+            <button id="signup-btn">Sign Up</button>
+        </div>
+
+        <div id="app-container" style="display: none;">
+            <div class="app-header">
+                <h2>My Treasure Hunt</h2>
+                <button id="logout-btn">Logout</button>
+            </div>
+        
+            <div id="congrats-msg" style="display: none;">
+                🎉 Hunt Completed! You've found everything!
+            </div>
+        
+            <div id="user-task-list"></div>
+        </div>
+
+        <script type="module" src="app.js?v=1.6"></script>
+    </body>
+</html>

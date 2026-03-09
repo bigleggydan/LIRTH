@@ -1,0 +1,82 @@
+/* Irish Green Theme v1.5 */
+* { box-sizing: border-box; }
+
+/* --- Global Theme & Background --- */
+body {
+    background-color: #009A44; /* Strong Irish Green */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #FFFFFF; /* High-Contrast White Text */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* --- The Containers (Login & Hunt) --- */
+#auth-container, #app-container {
+    background-color: #E8F5E9; /* Very Soft, Light Green for readability */
+    color: #333333; /* Darker, standard text inside containers */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Subtle Shadow */
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+/* --- Highlighting Text inside Green Backgrounds --- */
+.login-instructions strong, h1, h2, h3 {
+    color: #1A531A; /* Deep Forest Green for Headings inside containers */
+}
+
+/* --- Make Buttons Pop (Yellow/Gold) --- */
+button {
+    background-color: #FFD700; /* St Patrick's Gold/Yellow */
+    color: #1A531A; /* Dark Green Text on buttons */
+    border: 2px solid #1A531A;
+    font-weight: bold;
+}
+button:hover {
+    background-color: #FFFFFF;
+}
+
+/* TEXT INPUTS ONLY */
+input[type="email"], 
+input[type="password"], 
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* --- Fix the Staircase Alignment --- */
+.checklist-row {
+    display: flex;         /* Puts checkbox and label on the same line */
+    align-items: center;   /* Centers them vertically against each other */
+    justify-content: flex-start; /* Forces them to the left */
+    text-align: left;      /* Overrides the center-align from the parent */
+    width: 100%;           /* Takes up full container width */
+    margin-bottom: 12px;   /* Adds breathing room between items */
+    padding: 8px 0;        /* Optional: makes the clickable area bigger */
+}
+/* FORCE THE CHECKBOX SIZE */
+.checklist-row input[type="checkbox"] {
+    width: 20px !important;
+    min-width: 20px !important; /* Prevents it from shrinking to 0 */
+    max-width: 20px !important;
+    height: 20px !important;
+    margin: 0 12px 0 0 !important; /* Space between box and text */
+    cursor: pointer;
+    flex: none !important; /* Tells flexbox NOT to resize this */
+}
+
+.checklist-row label {
+    margin: 0 !important;
+    cursor: pointer;
+    flex-grow: 1;
+    text-align: left !important;
+}
+#congrats-msg {
+    transition: all 0.5s ease-in-out;
+}
