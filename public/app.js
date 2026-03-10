@@ -13,8 +13,11 @@ import {
     getFirestore, 
     doc, 
     getDoc, 
-    setDoc 
+    setDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+let isRegistering = false;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -33,21 +36,42 @@ function showAuthPage() {
 }
 
 // --- SIGN UP LOGIC ---
+
 async function handleRegister() {
+    isRegistering = true; // LIFT THE GATE
+    console.log("Registration started...");
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const firstName = document.getElementById('reg-first-name').value;
+
+    console.log("Form data grabbed:", firstName, email);
 
     try {
+        // 1. Create the user account in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Auth User created! UID:", user.uid); 
+
+        // 2. Save the First Name to Firestore
+        await setDoc(doc(db, "users", user.uid), {
+            firstName: firstName,
+            email: email,
+            score: 0, // Initializing for your future leaderboard!
+            createdAt: new Date()
+        });
+        console.log("DATABASE SAVE SUCCESSFUL!"); // BREADCRUMB 4
+        console.log("Registered with name:", firstName);
+
         // Send verification email immediately
         await sendEmailVerification(userCredential.user);
         alert("Verification email sent! Please check your inbox (and spam folder).");
-        
         // Log them out so they have to verify before getting in
         await signOut(auth);
         showAuthPage();
     } catch (error) {
+        isRegistering = false;
         alert("Registration failed: " + error.message);
+        console.error("CRASHED AT:", error.code, error.message); // THIS WILL TELL US WHY
     }
 }
 
@@ -66,7 +90,7 @@ async function handleLogin() {
 
 // --- THE WATCHER (The Bouncer) ---
 onAuthStateChanged(auth, (user) => {
-    if (user) {
+    if (user && !isRegistering) { // Only act if we aren't currently signing up
         if (user.emailVerified) {
             console.log("User is verified!");
             showAppPage();
@@ -76,7 +100,7 @@ onAuthStateChanged(auth, (user) => {
             signOut(auth);
             showAuthPage();
         }
-    } else {
+    }else if (!user && !isRegistering) { 
         showAuthPage();
     }
 });

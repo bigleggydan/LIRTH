@@ -1,0 +1,65 @@
+Moving to a second laptop is the perfect way to test if your new "Firebase Power" is truly portable. Since you already have the Git repo, you’re halfway there.
+
+To develop in two places, you need to replicate the environment (the tools) so that both laptops can "talk" to Google’s servers.
+
+Phase 1: The "New Laptop" Toolkit
+Before you touch your code, install these three things on the second machine:
+
+Node.js (LTS Version): Just like before, download it from nodejs.org. This gives you npm.
+
+Firebase CLI: Open a fresh terminal in VS Code and run:
+
+PowerShell
+npm install -g firebase-tools
+Git: Ensure Git is installed so you can pull your code.
+
+Phase 2: Connecting the Dots
+Once the tools are installed, follow this sequence:
+
+1. Clone the Repo
+
+PowerShell
+git clone [YOUR_REPO_URL]
+cd LIRTH
+2. Login to Firebase
+
+PowerShell
+firebase login
+(This links this specific laptop to your Google/Firebase account.)
+
+3. Link the Project
+Even though the .firebaserc file is already in your folder from the first laptop, you should "refresh" the connection:
+
+PowerShell
+firebase use --add
+Select your project (lirtr-2fc4d) from the list and give it an alias like default.
+
+Phase 3: The "Two-Device" Workflow
+This is the most important part. To keep both laptops in sync without causing "code conflicts," follow this simple "Sandwich" rule every time you sit down to work:
+
+Step A: The "Pull" (When you start)
+Before you type a single line of code, grab the latest changes from your other laptop:
+
+PowerShell
+git pull origin main
+Step B: The "Work"
+Do your coding. If you want to see your changes locally without deploying, run:
+
+PowerShell
+firebase serve
+Step C: The "Push" (When you finish)
+Save your work to the cloud so the other laptop can see it later:
+
+PowerShell
+git add .
+git commit -m "Updated the Treasure Hunt logic"
+git push origin main
+firebase deploy --only hosting
+⚠️ A Critical Note on firebase-config.js
+Check your .gitignore file. If firebase-config.js is listed there, it won't move between laptops via GitHub (this is a security feature to keep your "keys" off the public web).
+
+If it's missing on the new laptop: You will need to manually copy that one file over (via USB or email) once, or recreate it from your Firebase Console settings.
+
+If it IS in your GitHub repo: Then it will appear automatically when you git pull.
+
+Would you like me to check your .gitignore file to see if you'll need to manually move that config file?
