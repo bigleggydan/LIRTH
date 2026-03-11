@@ -96,3 +96,24 @@ input[type="text"] {
     display: block; /* Allows text-align center to work on it */
     margin: 0 auto;
 }
+
+#auth-container a {
+    color: #1A531A;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#auth-container p {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+#auth-message:not(:empty) {
+    background-color: #FFD700; /* Gold background to match your buttons */
+    color: #1A531A;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: block;
+}

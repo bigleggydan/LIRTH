@@ -33,59 +33,74 @@ function showAppPage() {
 function showAuthPage() {
     document.getElementById('auth-container').style.display = 'block';
     document.getElementById('app-container').style.display = 'none';
+
+    //Reset the welcome message for next user
+    const welcomeHeading = document.getElementById('welcome-user');
+    if (welcomeHeading) welcomeHeading.innerText = "Welcome!";
 }
 
-// --- SIGN UP LOGIC ---
+// REGISTRATION FUNCTION
+const signupBtn = document.getElementById('signup-btn');
+if (signupBtn) {
+    signupBtn.addEventListener('click', () => {
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const firstName = document.getElementById('reg-first-name').value;
 
-async function handleRegister() {
-    isRegistering = true; // LIFT THE GATE
-    console.log("Registration started...");
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const firstName = document.getElementById('reg-first-name').value;
+        if (!firstName) {
+            alert("Please enter your first name.");
+            return;
+        }
 
-    console.log("Form data grabbed:", firstName, email);
+        isRegistering = true; 
 
-    try {
-        // 1. Create the user account in Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log("Auth User created! UID:", user.uid); 
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+                const user = userCredential.user;
 
-        // 2. Save the First Name to Firestore
-        await setDoc(doc(db, "users", user.uid), {
-            firstName: firstName,
-            email: email,
-            score: 0, // Initializing for your future leaderboard!
-            createdAt: new Date()
-        });
-        console.log("DATABASE SAVE SUCCESSFUL!"); // BREADCRUMB 4
-        console.log("Registered with name:", firstName);
+                // Save to your 'users' folder in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    firstName: firstName,
+                    email: email,
+                    createdAt: new Date()
+                });
 
-        // Send verification email immediately
-        await sendEmailVerification(userCredential.user);
-        alert("Verification email sent! Please check your inbox (and spam folder).");
-        // Log them out so they have to verify before getting in
-        await signOut(auth);
-        showAuthPage();
-    } catch (error) {
-        isRegistering = false;
-        alert("Registration failed: " + error.message);
-        console.error("CRASHED AT:", error.code, error.message); // THIS WILL TELL US WHY
-    }
+                await sendEmailVerification(user);
+                alert("Account created! Please check your email for a verification link.");
+                
+                // Switch back to login view so they can sign in after verifying
+                document.getElementById('signup-view').style.display = 'none';
+                document.getElementById('login-view').style.display = 'block';
+                
+                isRegistering = false;
+            })
+            .catch((error) => {
+                isRegistering = false;
+                alert("Registration failed: " + error.message);
+            });
+    });
 }
 
-// --- LOGIN LOGIC ---
-async function handleLogin() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+// LOGIN FUNCTION
+const loginBtn = document.getElementById('login-btn');
+if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
 
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        // The onAuthStateChanged watcher below will handle the rest
-    } catch (error) {
-        alert("Login failed: " + error.message);
-    }
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                if (!user.emailVerified) {
+                    alert("Please verify your email before logging in.");
+                    signOut(auth);
+                }
+                // onAuthStateChanged handles the rest!
+            })
+            .catch((error) => {
+                alert("Login failed: " + error.message);
+            });
+    });
 }
 
 // --- THE WATCHER (The Bouncer) ---
@@ -94,6 +109,7 @@ onAuthStateChanged(auth, (user) => {
         if (user.emailVerified) {
             console.log("User is verified!");
             showAppPage();
+            updateWelcomeMessage(user);
             displayTreasureList();
         } else {
             alert("Please verify your email before logging in.");
@@ -183,19 +199,65 @@ function checkCompletion() {
     }
 }
 
-// --- EVENT LISTENERS ---
-const loginBtn = document.getElementById('login-btn');
-const signupBtn = document.getElementById('signup-btn');
+async function updateWelcomeMessage(user) {
+    const welcomeHeading = document.getElementById('welcome-user');
+    
+    try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            welcomeHeading.innerText = `Welcome, ${userData.firstName}!`;
+        } else {
+            welcomeHeading.innerText = "Welcome to the Hunt!";
+        }
+    } catch (error) {
+        console.error("Error fetching user name:", error);
+    }
+}
+
+// 1. The Toggle Links (to switch between views)
+const goToSignup = document.getElementById('go-to-signup');
+const goToLogin = document.getElementById('go-to-login');
+
+if (goToSignup) {
+    goToSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('signup-view').style.display = 'block';
+    });
+}
+
+if (goToLogin) {
+    goToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('signup-view').style.display = 'none';
+        document.getElementById('login-view').style.display = 'block';
+    });
+}
+
+// 2. The Logout Button
 const logoutBtn = document.getElementById('logout-btn');
-
-if (loginBtn) {
-    loginBtn.addEventListener('click', handleLogin);
-}
-
-if (signupBtn) {
-    signupBtn.addEventListener('click', handleRegister);
-}
-
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => signOut(auth));
+    logoutBtn.addEventListener('click', () => {
+        const authMsg = document.getElementById('auth-message');
+        const loginView = document.getElementById('login-view');
+        
+        signOut(auth).then(() => {
+            // 1. Show the goodbye message
+            if (authMsg) authMsg.innerText = "Goodbye! See you soon.";
+            
+            // 2. Hide the login form temporarily so they don't see "Welcome Back"
+            if (loginView) loginView.style.display = 'none';
+            
+            showAuthPage();
+
+            // 3. After 5 seconds, clear message and bring back the login form
+            setTimeout(() => {
+                if (authMsg) authMsg.innerText = "";
+                if (loginView) loginView.style.display = 'block';
+            }, 5000);
+        });
+    });
 }
