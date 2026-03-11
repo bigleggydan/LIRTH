@@ -9,7 +9,9 @@ body {
     margin: 0;
     padding: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 /* --- The Containers (Login & Hunt) --- */
@@ -79,4 +81,18 @@ input[type="text"] {
 }
 #congrats-msg {
     transition: all 0.5s ease-in-out;
+}
+.logo-container {
+    display: block !important;     /* Forces the container to take up the whole line */
+    text-align: center;  /* Centers any inline content (the image) */
+    width: 100%;
+    padding:  20px 0; /* Space between logo and the box below */
+    clear: both; /* Prevents anything from floating next to it */
+}
+
+#main-logo {
+    height: 75px !important; 
+    width: auto;
+    display: block; /* Allows text-align center to work on it */
+    margin: 0 auto;
 }
