@@ -1,4 +1,3 @@
-console.log("Button check:", document.getElementById('login-btn'));
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
@@ -16,6 +15,8 @@ import {
     setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+console.log("Button check:", document.getElementById('login-btn'));
 
 let isRegistering = false;
 
@@ -104,23 +105,45 @@ if (loginBtn) {
 }
 
 // --- THE WATCHER (The Bouncer) ---
-onAuthStateChanged(auth, (user) => {
-    if (user && !isRegistering) { // Only act if we aren't currently signing up
-        if (user.emailVerified) {
-            console.log("User is verified!");
-            showAppPage();
-            updateWelcomeMessage(user);
-            displayTreasureList();
-        } else {
-            alert("Please verify your email before logging in.");
-            signOut(auth);
+onAuthStateChanged(auth, async (user) => {
+    // 1. Get our elements
+    const welcomeEl = document.getElementById('welcome-message'); // The login screen greeting
+    const welcomeHeading = document.getElementById('welcome-user'); // The app screen greeting
+    
+    if (user) {
+        // If email isn't verified, don't let them in
+        if (!user.emailVerified && !isRegistering) {
             showAuthPage();
+            return;
         }
-    }else if (!user && !isRegistering) { 
+
+        // USER IS LOGGED IN - Show the App
+        showAppPage();
+        displayTreasureList();
+
+        try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const name = docSnap.data().firstName;
+                if (welcomeHeading) welcomeHeading.innerText = `Welcome, ${name}!`;
+                if (welcomeEl) welcomeEl.innerText = `Welcome back, ${name}!`;
+            } else {
+                if (welcomeHeading) welcomeHeading.innerText = "Welcome to the Hunt!";
+                if (welcomeEl) welcomeEl.innerText = "Welcome to the Hunt!";
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    } else {
+        // NO USER - Show Login Screen
         showAuthPage();
+        if (welcomeEl) {
+            welcomeEl.innerText = "Please sign in to start the hunt.";
+        }
     }
 });
-
 // --- LIST LOGIC ---
 async function displayTreasureList() {
     const listDiv = document.getElementById('user-task-list');
