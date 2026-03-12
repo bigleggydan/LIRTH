@@ -85,65 +85,75 @@ if (signupBtn) {
 // LOGIN FUNCTION
 const loginBtn = document.getElementById('login-btn');
 if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', async () => { // Make sure 'async' is here!
+        console.log("Login button actually clicked!");
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                if (!user.emailVerified) {
-                    alert("Please verify your email before logging in.");
-                    signOut(auth);
-                }
-                // onAuthStateChanged handles the rest!
-            })
-            .catch((error) => {
-                alert("Login failed: " + error.message);
-            });
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            
+            // Force the reload right here!
+            await user.reload();
+            
+            if (user.emailVerified) {
+                console.log("Login Success: Email is verified.");
+                showAppPage();
+                displayTreasureList();
+            } else {
+                alert("Please verify your email first!");
+                await signOut(auth);
+            }
+        } catch (error) {
+            alert("Login failed: " + error.message);
+        }
     });
 }
 
 // --- THE WATCHER (The Bouncer) ---
 onAuthStateChanged(auth, async (user) => {
-    // 1. Get our elements
-    const welcomeEl = document.getElementById('welcome-message'); // The login screen greeting
-    const welcomeHeading = document.getElementById('welcome-user'); // The app screen greeting
+    console.log("Bouncer triggered. User state:", user ? "Logged In" : "Logged Out");
+
+    const loginGreeting = document.getElementById('login-greeting');
+    const appGreeting = document.getElementById('welcome-user');
     
     if (user) {
-        // If email isn't verified, don't let them in
-        if (!user.emailVerified && !isRegistering) {
+        const freshUser = user;
+
+        if (!freshUser.emailVerified) {
+            console.log("Bouncer: Access Denied. Email not verified.");
+            if (loginGreeting) loginGreeting.innerText = "Please verify your email!";
             showAuthPage();
             return;
         }
 
-        // USER IS LOGGED IN - Show the App
+        console.log("Bouncer: Access Granted!");
         showAppPage();
         displayTreasureList();
 
         try {
-            const docRef = doc(db, "users", user.uid);
+            const docRef = doc(db, "users", freshUser.uid);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const name = docSnap.data().firstName;
-                if (welcomeHeading) welcomeHeading.innerText = `Welcome, ${name}!`;
-                if (welcomeEl) welcomeEl.innerText = `Welcome back, ${name}!`;
+                console.log("Bouncer: Found user name:", name);
+                if (appGreeting) appGreeting.innerText = `Welcome, ${name}!`;
             } else {
-                if (welcomeHeading) welcomeHeading.innerText = "Welcome to the Hunt!";
-                if (welcomeEl) welcomeEl.innerText = "Welcome to the Hunt!";
+                console.log("Bouncer: No Firestore doc found.");
+                if (appGreeting) appGreeting.innerText = "Welcome to the Hunt!";
             }
         } catch (error) {
-            console.error("Error fetching user data:", error);
+            console.error("Bouncer: Error fetching Firestore doc:", error);
         }
     } else {
-        // NO USER - Show Login Screen
+        console.log("Bouncer: No user detected.");
         showAuthPage();
-        if (welcomeEl) {
-            welcomeEl.innerText = "Please sign in to start the hunt.";
-        }
+        if (loginGreeting) loginGreeting.innerText = "Welcome";
     }
 });
+
 // --- LIST LOGIC ---
 async function displayTreasureList() {
     const listDiv = document.getElementById('user-task-list');
