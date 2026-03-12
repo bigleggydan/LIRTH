@@ -15,6 +15,7 @@ import {
     setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getDocs, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 console.log("Button check:", document.getElementById('login-btn'));
 
@@ -131,6 +132,7 @@ onAuthStateChanged(auth, async (user) => {
         console.log("Bouncer: Access Granted!");
         showAppPage();
         displayTreasureList();
+        updateLeaderboard();
 
         try {
             const docRef = doc(db, "users", freshUser.uid);
@@ -210,6 +212,7 @@ function setupCheckboxListeners() {
                 }, { merge: true });
                 console.log("Progress saved!");
                 checkCompletion();
+                updateLeaderboard();
             }
         });
     });
@@ -293,4 +296,50 @@ if (logoutBtn) {
             }, 5000);
         });
     });
+}
+
+async function updateLeaderboard() {
+    const boardBody = document.getElementById('leaderboard-body');
+    if (!boardBody) return;
+
+    try {
+        // 1. Get all users and all progress at once
+        const [usersSnap, progressSnap] = await Promise.all([
+            getDocs(collection(db, "users")),
+            getDocs(collection(db, "userProgress"))
+        ]);
+
+        // 2. Map progress into a simple list of {uid, score}
+        const scores = {};
+        progressSnap.forEach(doc => {
+            const data = doc.data();
+            // Count how many items are set to 'true'
+            const count = Object.values(data).filter(val => val === true).length;
+            scores[doc.id] = count;
+        });
+
+        // 3. Combine with names and sort
+        const leaderboardData = [];
+        usersSnap.forEach(doc => {
+            const userData = doc.data();
+            leaderboardData.push({
+                name: userData.firstName || "Anonymous",
+                score: scores[doc.id] || 0
+            });
+        });
+
+        // Sort Highest to Lowest
+        leaderboardData.sort((a, b) => b.score - a.score);
+
+        // 4. Update the UI
+        boardBody.innerHTML = leaderboardData.map(entry => `
+            <tr>
+                <td>${entry.name}</td>
+                <td>${entry.score}</td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        console.error("Leaderboard Error:", error);
+    }
 }

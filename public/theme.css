@@ -117,3 +117,61 @@ input[type="text"] {
     margin-bottom: 15px;
     display: block;
 }
+
+/* --- LEADERBOARD STYLES --- */
+#leaderboard-section {
+    margin-top: 30px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#leaderboard-section h3 {
+    text-align: center;
+    color: #1A531A; /* Your dark green */
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboard-table th {
+    text-align: left;
+    font-size: 0.9rem;
+    color: #666;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+}
+
+#leaderboard-body tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#leaderboard-body td {
+    padding: 12px 5px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Bold the names */
+#leaderboard-body td:first-child {
+    font-weight: bold;
+}
+
+/* Make the score look like a badge */
+#leaderboard-body td:last-child {
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace; /* Clean, numeric feel */
+    font-weight: 900;
+    color: #1A531A;
+}
+
+/* Highlight the Top Hunter */
+#leaderboard-body tr:first-child td {
+    color: #d4af37; /* Gold for 1st place */
+}
