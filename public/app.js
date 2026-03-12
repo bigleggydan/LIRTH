@@ -332,13 +332,19 @@ async function updateLeaderboard() {
         leaderboardData.sort((a, b) => b.score - a.score);
 
         // 4. Update the UI
-        boardBody.innerHTML = leaderboardData.map(entry => `
-            <tr>
-                <td>${entry.name}</td>
-                <td>${entry.score}</td>
-            </tr>
-        `).join('');
+        boardBody.innerHTML = leaderboardData.map((entry, index) => {
+            let medal = "";
+            if (index === 0 && entry.score > 0) medal = "🥇 ";
+            if (index === 1 && entry.score > 0) medal = "🥈 ";
+            if (index === 2 && entry.score > 0) medal = "🥉 ";
 
+            return `
+                <tr>
+                    <td>${medal}${entry.name}</td>
+                    <td>${entry.score}</td>
+                </tr>
+            `;
+        }).join('');
     } catch (error) {
         console.error("Leaderboard Error:", error);
     }

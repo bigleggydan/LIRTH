@@ -175,3 +175,23 @@ input[type="text"] {
 #leaderboard-body tr:first-child td {
     color: #d4af37; /* Gold for 1st place */
 }
+
+/* Medal Row Styling */
+#leaderboard-body tr:nth-child(1) {
+    background-color: rgba(212, 175, 55, 0.1); /* Soft Gold */
+}
+
+#leaderboard-body tr:nth-child(2) {
+    background-color: rgba(192, 192, 192, 0.1); /* Soft Silver */
+}
+
+#leaderboard-body tr:nth-child(3) {
+    background-color: rgba(205, 127, 50, 0.1); /* Soft Bronze */
+}
+
+/* Ensure the medal emoji doesn't push the name too far */
+#leaderboard-body td:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
