@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rovers Kit Order</title>
+    <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+    <div class="app-container">
+        <h2>Order Your Kit</h2>
+        <form id="order-form">
+            <input type="text" id="order-name" placeholder="Your Name" required>
+
+            <div id="kit-choices-group">
+                <label for="kit-choices">Kit available:</label>
+                <select id="kit-choices">
+                    <option value="greent">Green T-Shirt</option>
+                    <option value="whitet">White T-Shirt</option>
+                    <option value="longwhitet">Long Sleeve White</option>
+                    <option value="longblackt">Long Sleeve Black</option>
+                    <option value="hybrid">Hybrid Top</option>
+                    <option value="lshooded">Long Sleeved Hooded top</option>
+                    <option value="leggings">Leggings</option>
+                    <option value="polos">Polo Shirt</option>
+                    <option value="tShirt">Cotton T Shirt</option>
+                </select>
+            </div>
+
+            <label for="gender">Category:</label>
+            <select id="gender" required>
+                <option value="" disabled selected>Select Category</option>
+                <option value="male">Mens / Unisex</option>
+                <option value="female">Ladies Fit</option>
+            </select>
+
+            <div id="male-sizes-group">
+                <label for="male-size">Size (Mens):</label>
+                <select id="male-size">
+                    <option value="S">Small</option>
+                    <option value="M">Medium</option>
+                    <option value="L">Large</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+            </div>
+
+            <div id="female-sizes-group" style="display: none;">
+                <label for="female-size">Size (Ladies):</label>
+                <select id="female-size">
+                    <option value="8">UK 8</option>
+                    <option value="10">UK 10</option>
+                    <option value="12">UK 12</option>
+                    <option value="14">UK 14</option>
+                    <option value="16">UK 16</option>
+                </select>
+            </div>
+
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <script type="module" src="kit.js"></script>
+</body>
+</html>
