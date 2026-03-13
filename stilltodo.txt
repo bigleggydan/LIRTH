@@ -1,6 +1,14 @@
-Get login screen to work
-Create Master List
-Give user a copy of Master List when they log in
-Save Users Copy for retrieval
-Save users edits to master
+Get login screen to work - done
+Create Master List - done
+Give user a copy of Master List when they log in - done
+Save Users Copy for retrieval - done
+Save users edits to master - done
+Scoreboard - done
+Kit ordering - in progress
+Stop the kit drop down defaulting to green t-shirt
+Add phtos to Orders
+Connect to spreadsheet - to capture order data
+Add links to kit page once live
+
+Diary of Events / Times / Meeting places
 
