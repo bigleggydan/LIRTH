@@ -11,6 +11,8 @@ const orderForm = document.getElementById('order-form');
 const genderSelect = document.getElementById('gender');
 const maleGroup = document.getElementById('male-sizes-group');
 const femaleGroup = document.getElementById('female-sizes-group');
+const kitSelect = document.getElementById('kit-choices');
+const kitPreview = document.getElementById('kit-preview');
 
 genderSelect.addEventListener('change', function() {
     console.log("Gender changed to:", this.value); // If you don't see this in console, the link is broken
@@ -47,4 +49,25 @@ orderForm.addEventListener('submit', async (e) => {
     } catch (error) {
         console.error("Order failed:", error);
     }
+});
+kitSelect.addEventListener('change', function() {
+    const selectedValue = this.value;
+    console.log("User picked:", selectedValue);
+
+    if (selectedValue) {
+        // This assumes your files are named 'greent.jpg', 'whitet.jpg', etc.
+        // Change '.jpg' to '.png' if that's what your files actually are!
+        const imagePath = `/images/${selectedValue}.jpg`; 
+        
+        kitPreview.src = imagePath;
+        kitPreview.style.display = 'block';
+        
+        console.log("Setting image src to:", imagePath);
+    }
+});
+
+// ERROR HANDLING: If an image fails to load, hide the broken icon
+kitPreview.addEventListener('error', function() {
+    console.error("Could not find the image at:", this.src);
+    this.style.display = 'none'; 
 });
