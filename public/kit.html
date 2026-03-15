@@ -6,13 +6,21 @@
 </head>
 <body>
     <div class="app-container">
-        <h2>Order Your Kit</h2>
+        <header class="app-header">
+            <div class="logo-container">
+                <a href="/">
+                    <img src="/images/black_logo_tran.png" alt="Rovers Logo" id="main-logo">
+                </a>
+            </div>
+            <h1>Kit Order Portal</h1>
+        </header>
         <form id="order-form">
             <input type="text" id="order-name" placeholder="Your Name" required>
 
             <div id="kit-choices-group">
                 <label for="kit-choices">Kit available:</label>
                 <select id="kit-choices">
+                    <option value="" disabled selected>Choose your kit</option>
                     <option value="greent">Green T-Shirt</option>
                     <option value="whitet">White T-Shirt</option>
                     <option value="longwhitet">Long Sleeve White</option>
@@ -27,7 +35,7 @@
 
             <label for="gender">Category:</label>
             <select id="gender" required>
-                <option value="" disabled selected>Select Category</option>
+                <option value="" disabled selected>Male/Female</option>
                 <option value="male">Mens / Unisex</option>
                 <option value="female">Ladies Fit</option>
             </select>
@@ -35,6 +43,7 @@
             <div id="male-sizes-group">
                 <label for="male-size">Size (Mens):</label>
                 <select id="male-size">
+                    <option value="" disabled selected>Size</option>
                     <option value="S">Small</option>
                     <option value="M">Medium</option>
                     <option value="L">Large</option>
@@ -46,6 +55,7 @@
             <div id="female-sizes-group" style="display: none;">
                 <label for="female-size">Size (Ladies):</label>
                 <select id="female-size">
+                    <option value="" disabled selected>Size</option>
                     <option value="8">UK 8</option>
                     <option value="10">UK 10</option>
                     <option value="12">UK 12</option>

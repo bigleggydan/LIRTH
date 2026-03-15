@@ -4,8 +4,8 @@
 /* --- Global Theme & Background --- */
 body {
     background-color: #009A44; /* Strong Irish Green */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #FFFFFF; /* High-Contrast White Text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
     display: flex;
